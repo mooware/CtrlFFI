@@ -21,16 +21,6 @@
 #include <cstring>
 
 
-// HACK: stdint.h is not available in VC9. try to define uintptr_t based
-// on the size of a void pointer. I don't know the correct compiler macros
-// for this, but the trait also looks way more portable than an "#ifdef".
-
-template <size_t sz> struct GetUIntPtrType;
-template <> struct GetUIntPtrType<4> { typedef uint32_t Type; };
-template <> struct GetUIntPtrType<8> { typedef uint64_t Type; };
-
-typedef GetUIntPtrType<sizeof(void *)>::Type uintptr_t;
-
 /// Enum of the functions implemented in this Ctrl extension
 enum
 {
@@ -521,7 +511,7 @@ const char *FFIExternHdl::ffiGetTypeName(ExecuteParamRec &param)
   IntegerVar paramType;
   paramType = *(param.args->getFirst()->evaluate(param.thread));
 
-  const size_t typeArraySize = sizeof(TYPE_NAMES) / sizeof(*TYPE_NAMES);
+  int typeArraySize = (int) sizeof(TYPE_NAMES) / sizeof(*TYPE_NAMES);
   if (paramType.getValue() < 0 || paramType.getValue() >= typeArraySize)
   {
     // TODO: error. out of range.

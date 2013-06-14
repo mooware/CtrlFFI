@@ -1,5 +1,7 @@
 #include <FFIValue.hxx>
 
+#include <FFITypes.hxx>
+
 #include <Variable.hxx>
 #include <CharVar.hxx>
 #include <FloatVar.hxx>
