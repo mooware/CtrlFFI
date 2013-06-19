@@ -1,6 +1,6 @@
 include $(API_ROOT)/CtrlExt.mk
 
-OFILES = FFIExternHdl.o
+OFILES = FFIExternHdl.o FFIValue.o
 
 CtrlFFI: $(OFILES)
 	@rm -f addVerInfo.o
