@@ -56,7 +56,7 @@ mapping GetSystemTime()
   // declare function
   if (! GetSystemTime_func)
   {
-    GetSystemTime_func = ffiDeclareFunction("kernel32.dll", "GetSystemTime", FFI_VOID, FFI_RAW_POINTER);
+    GetSystemTime_func = ffiDeclareFunction("kernel32.dll", "GetSystemTime", FFI_VOID, FFI_POINTER);
   }
 
   // prepare struct
@@ -140,13 +140,13 @@ uint allocate(uint size)
   // void *malloc(size_t size);
   if (! malloc_func)
   {
-    malloc_func = ffiDeclareFunction(clibPath, "malloc", FFI_RAW_POINTER, FFI_UINT32);
+    malloc_func = ffiDeclareFunction(clibPath, "malloc", FFI_POINTER, FFI_UINT32);
   }
 
   // void free(void *ptr);
   if (! free_func)
   {
-    free_func = ffiDeclareFunction(clibPath, "free", FFI_VOID, FFI_RAW_POINTER);
+    free_func = ffiDeclareFunction(clibPath, "free", FFI_VOID, FFI_POINTER);
   }
 
   int newaddr = 0;
@@ -266,10 +266,10 @@ mapping localtime(long timestamp)
 
   if (! localtime_func)
   {
-    localtime_func = ffiDeclareFunction(clibPath, (_WIN32 ? "_localtime64" : "localtime"), FFI_RAW_POINTER, FFI_INT64_PTR);
+    localtime_func = ffiDeclareFunction(clibPath, (_WIN32 ? "_localtime64" : "localtime"), FFI_POINTER, FFI_INT64_PTR);
   }
 
-  int tm_ptr = 0;
+  ulong tm_ptr = 0;
   ffiCallFunction(localtime_func, tm_ptr, timestamp);
 
   dyn_int values = ffiBufferToStruct(tm_ptr, tm);
@@ -303,12 +303,12 @@ int backtrace_symbols_func = 0;
 dyn_string backtrace()
 {
   int maxFrameCount = 30;
-  ulong frameArr = ffiAllocBuffer(maxFrameCount * ffiGetTypeSize(FFI_RAW_POINTER));
+  ulong frameArr = ffiAllocBuffer(maxFrameCount * ffiGetTypeSize(FFI_POINTER));
 
   if (! backtrace_func)
   {
-    backtrace_func = ffiDeclareFunction(clibPath, "backtrace", FFI_INT, FFI_RAW_POINTER, FFI_INT);
-    backtrace_symbols_func = ffiDeclareFunction(clibPath, "backtrace_symbols", FFI_RAW_POINTER, FFI_RAW_POINTER, FFI_INT);
+    backtrace_func = ffiDeclareFunction(clibPath, "backtrace", FFI_INT, FFI_POINTER, FFI_INT);
+    backtrace_symbols_func = ffiDeclareFunction(clibPath, "backtrace_symbols", FFI_POINTER, FFI_POINTER, FFI_INT);
   }
 
   // get the stack frame pointers
@@ -323,7 +323,7 @@ dyn_string backtrace()
   dyn_string result;
   for (int i = 0; i < frameCount; ++i)
   {
-    ulong symbolPtr = symbolArr + (i * ffiGetTypeSize(FFI_RAW_POINTER));
+    ulong symbolPtr = symbolArr + (i * ffiGetTypeSize(FFI_POINTER));
     string line = ffiBufferToString(symbolPtr);
     dynAppend(result, line);
   }
@@ -375,7 +375,7 @@ main()
     clibPath = "libc.so.6";
   }
 
-  int ptr = allocate(256);
+  ulong ptr = allocate(256);
   DebugN("ptr from malloc", ptr);
   DebugN("hex ptr from malloc", printfToHex(ptr));
   
