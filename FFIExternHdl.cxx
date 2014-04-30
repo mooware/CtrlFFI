@@ -457,7 +457,7 @@ DynVar *FFIExternHdl::ffiGetAllFunctions(ExecuteParamRec &param)
     for (std::vector<IntegralType>::const_iterator it = function->argTypes.begin();
          it != function->argTypes.end(); ++it)
     {
-      argTypes->append(new UIntegerVar(function->returnType));
+      argTypes->append(new UIntegerVar(*it));
     }
 
     funcDesc->setAt(new TextVar("argtypes"), argTypes);
