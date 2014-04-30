@@ -12,7 +12,7 @@ CtrlFFI: $(OFILES) $(LIBFFI_LIB)
 	$(SHLIB) -o CtrlFFI.so $(OFILES) $(LIBS)
 
 $(LIBFFI_LIB) $(LIBFFI_INCL):
-	@cd libffi ; ./configure --with-pic --prefix=$(PWD)/install && make && make install
+	@cd libffi ; ./configure --with-pic --prefix=$(PWD)/libffi/install && make && make install
 
 $(OFILES): $(LIBFFI_INCL)
 

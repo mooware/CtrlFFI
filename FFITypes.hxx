@@ -1,6 +1,7 @@
 #ifndef _FFITYPES_H_
 #define _FFITYPES_H_
 
+#ifdef _WIN32
 // HACK: cannot include stdint.h, since it conflicts with Types.hxx.
 // try to define uintptr_t based on the size of a void pointer.
 
@@ -9,6 +10,9 @@ template <> struct GetUIntPtrType<4> { typedef unsigned int Type; };
 template <> struct GetUIntPtrType<8> { typedef unsigned long long Type; };
 
 typedef GetUIntPtrType<sizeof(void *)>::Type uintptr_t;
+#else
+#include <stdint.h>
+#endif
 
 /// Integral types supported by CtrlFFI
 enum IntegralType
