@@ -368,7 +368,7 @@ main()
 {
   if (_WIN32)
   {
-    clibPath = "msvcr90.dll";
+    clibPath = "msvcr100.dll";
   }
   else
   {
