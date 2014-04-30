@@ -350,8 +350,8 @@ bool FFIExternHdl::ffiCallFunction(ExecuteParamRec &param)
   }
 
   // check the number of params
-  unsigned int argCount = func->argTypes.size();
-  unsigned int expectedParams = 1;
+  size_t argCount = func->argTypes.size();
+  size_t expectedParams = 1;
 
   if (argCount > 0) { expectedParams += (argCount + 1); }
   else if (func->returnType != CTRLFFI_VOID) { ++expectedParams; }
@@ -381,7 +381,7 @@ bool FFIExternHdl::ffiCallFunction(ExecuteParamRec &param)
   // prepare function args
   void **argValues = new void *[argCount];
 
-  for (unsigned int i = 0; i < argCount; ++i)
+  for (size_t i = 0; i < argCount; ++i)
   {
     int argType = func->argTypes.at(i);
     std::auto_ptr<FFIValue> argValueStorage(FFIValue::allocateValue(argType));
@@ -421,7 +421,7 @@ bool FFIExternHdl::ffiCallFunction(ExecuteParamRec &param)
   // TODO: maybe throw a warning?
 
   // index 0 is the return value, index 1 to <argCount> are the arguments
-  for (unsigned int i = 0; i <= argCount; ++i)
+  for (size_t i = 0; i <= argCount; ++i)
   {
     Variable *target = param.args->getNext()->getTarget(param.thread);
     if (! target) // TODO: can this be null?
@@ -430,7 +430,7 @@ bool FFIExternHdl::ffiCallFunction(ExecuteParamRec &param)
       return false;
     }
 
-    storedValues.getAt(i)->getValue(*target);
+    storedValues.getAt((unsigned int) i)->getValue(*target);
   }
 
   return true;
@@ -443,7 +443,7 @@ DynVar *FFIExternHdl::ffiGetAllFunctions(ExecuteParamRec &param)
 {
   DynVar *result = new DynVar(MAPPING_VAR);
 
-  for (size_t i = 0; i < functions.getNumberOfItems(); ++i)
+  for (unsigned int i = 0; i < functions.getNumberOfItems(); ++i)
   {
     const FFIFunction *function = functions.getAt(i);
 
@@ -491,7 +491,7 @@ unsigned int FFIExternHdl::ffiGetTypeSize(ExecuteParamRec &param)
   ffi_type *type = getFFIType(paramType.getValue());
   if (type)
   {
-    return type->size;
+    return (unsigned int) type->size;
   }
 
   return 0;
@@ -616,7 +616,7 @@ char *FFIExternHdl::ffiBufferToString(ExecuteParamRec &param)
     return 0;
   }
 
-  PVSSlong length = 0;
+  size_t length = 0;
   if (param.args->getNumberOfItems() > 1)
   {
     // length of string given
@@ -630,7 +630,7 @@ char *FFIExternHdl::ffiBufferToString(ExecuteParamRec &param)
       return 0;
     }
 
-    length = paramStrlen.getValue();
+    length = (size_t) paramStrlen.getValue();
   }
   else
   {
