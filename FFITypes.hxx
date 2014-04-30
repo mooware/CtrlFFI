@@ -1,21 +1,14 @@
 #ifndef _FFITYPES_H_
 #define _FFITYPES_H_
 
-#if defined(_MSCVER) && _MSC_VER < 1600
-// HACK: stdint.h is not available in VC9. try to define uintptr_t based
-// on the size of a void pointer. I don't know the correct compiler macros
-// for this, but the trait also looks way more portable than an "#ifdef".
+// HACK: cannot include stdint.h, since it conflicts with Types.hxx.
+// try to define uintptr_t based on the size of a void pointer.
 
 template <unsigned int Size> struct GetUIntPtrType;
 template <> struct GetUIntPtrType<4> { typedef unsigned int Type; };
 template <> struct GetUIntPtrType<8> { typedef unsigned long long Type; };
 
 typedef GetUIntPtrType<sizeof(void *)>::Type uintptr_t;
-
-#else
-#include <stdint.h>
-#endif // _WIN32
-
 
 /// Integral types supported by CtrlFFI
 enum IntegralType
