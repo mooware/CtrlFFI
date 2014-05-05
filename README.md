@@ -10,7 +10,7 @@ Usage
 
 ```c
 // register the function with its signature
-uint funcId = ffiDeclareFunction("libc.so.6", "time", FFI_INT, FFI_INT_PTR);
+uint funcId = ffiDeclareFunction("libc.so.6", "time", FFI_LONG, FFI_LONG_PTR);
 
 // call the function
 long returnvalue = 0;
